@@ -1,4 +1,33 @@
 *local markers = {}
+local script = ""
+
+local markerInitPath = "C://temp//setup//Marker.lua"
+local scriptPath = "C://temp//map123//script.lua"
+
+function GetFileContent(filePath)
+    local fileread = io.open(filePath, "r")
+    local text = filereader:read()
+    return text
+end
+
+function GetFileWriter(filePath)
+    local filewriter = io.open(filePath)
+    return filewriter
+end
+
+function AddMarkerScripts(text)
+    lines = {}
+    for s in text:gmatch("[^\r\n]+") do
+        table.insert(lines, s)
+    end
+end
+
+function InitializeMarkerScript()
+    local text = GetFileContent(markerInitPath)
+
+    local filewriter = GetFileWriter(scriptPath)
+    filewriter:write(text)
+end
 
 function SaveToFile(script )
 
@@ -8,7 +37,7 @@ function SaveToFile(script )
         CreateScriptsFile.lua
         UpdateMeta()
         WriteToFile()
-    end*
+    end
 end
 
 function CreateNewScript(scriptType, scriptValues, markerValues)
@@ -17,6 +46,7 @@ function CreateNewScript(scriptType, scriptValues, markerValues)
       outputError("Loading failed - cannot open \"Actions.xml\"!")
       return
     end
+    InitializeMarkerScript()
     for i, action in ipairs(xmlNodeGetChildren(xmlFile)) do
       local posX = xmlNodeGetAttribute(action, "posX"):gsub(" ", "")
       local posY = xmlNodeGetAttribute(action, "posY"):gsub(" ", "")
@@ -24,21 +54,20 @@ function CreateNewScript(scriptType, scriptValues, markerValues)
       local visible = xmlNodeGetAttribute(action, "Visiblemarker"):gsub(" ", "")
       local size = xmlNodeGetAttribute(action, "Markersize"):gsub(" ", "")
       local markercolor = xmlNodeGetAttribute(action, "Markercolor"):gsub(" ", "")
-      --local delay = xmlNodeGetAttribute(action, "Delay"):gsub(" ", "")
       local n = xmlNodeGetName(action)
     local script = ""
-    local marker = CreateMarker(markerValues)
+    local marker = CreateMarker(posX, posY, posZ, markerType, size, markercolor, visible)
     if(scriptType == velocity)
-        script = CreateVelocityScript(scriptValues)
+        script = CreateVelocityScript(scriptValues, marker)
     else if (scriptType == slowmotion)
-        script = CreateSlowmotionScript(scriptValues)
+        script = CreateSlowmotionScript(scriptValues, marker)
     end 
     if(script != null)
         SaveToFile(script)
     end
 end
 
-CreateVelocityScirpt()
+CreateVelocityScirpt(scriptValues, marker)
     local text = "VelocityScript"
     return text
 end
