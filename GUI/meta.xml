@@ -1,0 +1,4 @@
+<meta>
+    <info author="Xer0" name="GUI" version="1.0" type="misc"/>
+    <script src="main.lua" type="client" />
+</meta>
