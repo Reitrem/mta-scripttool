@@ -6,11 +6,10 @@ function velocity ( hitPlayer, matchingDimension )
     if hitPlayer ~= gMe then return end
         
     if source == [marker] then
-        
-        setElementVelocity (vehicle, [x], [y], [z])  -- !
-        
+        local x, y, z = GetElementVelocity(vehicle)
+        setElementVelocity (vehicle, [x], [y], [z]) 
+
     end
 end
-
 addEventHandler( "onClientResourceStart", getResourceRootElement(getThisResource()), Marker )
 addEventHandler ( "onClientMarkerHit", getRootElement(), velocity)
